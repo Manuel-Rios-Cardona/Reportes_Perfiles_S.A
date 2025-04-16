@@ -6,7 +6,7 @@
 Sistema web creado para la administración de PerfilesSA, facilitando la gestión eficaz y ordenada de empleados y departamentos.
 
 ## Las Tecnologías Empleadas
-- Lenguaje de Escriptura: A#
+- Lenguaje de Escriptura: C#
 - Esquema: ASP.NET Forms Web
 - Registro de Datos: SQL Server MySQL
 - Backend: HTML, CSS, JavaScript, Javascript
