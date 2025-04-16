@@ -3,7 +3,10 @@ PerfilesSA
 Sistema de Administración de Controles PerfilesSA
 
 🚀 Detalle 
+
 Sistema web creado para la administración de PerfilesSA, facilitando la gestión eficaz y ordenada de empleados y departamentos.
+
+
 💻 Requisitos Antecedentes
 
 Visual Studio 2019 y más avanzado
