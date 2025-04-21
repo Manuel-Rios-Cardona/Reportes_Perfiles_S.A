@@ -20,7 +20,7 @@ git clone https://github.com/Manuel-Rios-Cardona/Reportes_Perfiles_S.A.git
 - Abre el proyecto en Visual Studio.
 - Restaura los paquetes NuGet necesarios.
 - Configura la cadena de conexión en el archivo Web.config para apuntar a tu instancia de SQL Server.
-- Ejecuta el script Database.sql para crear la base de datos.
+- Ejecuta el script BaseDeDatos.sql para crear la base de datos.
 - Inicia la aplicación desde Visual Studio.
 
 💻 **Requisitos Antecedentes**
@@ -34,9 +34,9 @@ git clone https://github.com/Manuel-Rios-Cardona/Reportes_Perfiles_S.A.git
 ### 1: Configuración de la Base de Datos
 - Abrir el estudio de gestión de SQL Server.
 - Establecer una reciente base de datos denominada "PerfilesSA".
-- Examinar el archivo Database.sql ubicado en la raíz del proyecto y abrirlo.
+- Examinar el archivo BaseDeDatos.sql ubicado en la raíz del proyecto y abrirlo.
 - Implementar el script íntegro para la creación de las tablas:
-  - Trabajadores (Trabajadores)
+  - Trabajadores (Empleados)
   - Departamentos (Secciones)
   - Y sus correspondientes vínculos
 
@@ -45,7 +45,7 @@ git clone https://github.com/Manuel-Rios-Cardona/Reportes_Perfiles_S.A.git
 - Abrir la solución PerfilesSA.sln en Visual Studio
 - Abrir el archivo Web.config
 - Modificar la cadena de conexión:
-  - Apply to Employee.cs
+  - Aplicar a Empleado.cs
   - Reemplazar "TU_SERVIDOR" con el nombre de tu servidor SQL Server
 
 ### 3. Compilación y Ejecución
@@ -54,12 +54,12 @@ git clone https://github.com/Manuel-Rios-Cardona/Reportes_Perfiles_S.A.git
 - Ejecutar el proyecto (F5 o IIS Express)
 
 ## 📁 Estructura del Proyecto
-- Default.aspx - Página principal con gestión de empleados
-- Departments.aspx - Gestión de departamentos
-- Reports.aspx - Reportes y estadísticas
-- Models/ - Clases de modelo (Employee.cs, Department.cs)
-- Services/ - Lógica de negocio
-- Database.sql - Script de creación de base de datos
+- Inicio.aspx - Página principal con gestión de empleados
+- Departamentos.aspx - Gestión de departamentos
+- Reportes.aspx - Reportes y estadísticas
+- Modelos/ - Clases de modelo (Empleado.cs, Departamento.cs)
+- Servicios/ - Lógica de negocio
+- BaseDeDatos.sql - Script de creación de base de datos
 
 ## Respuesta a Problemas Compartidos
 
