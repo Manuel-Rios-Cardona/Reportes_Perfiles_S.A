@@ -7,38 +7,38 @@ namespace PerfilesSA
 {
     public class Global : HttpApplication
     {
-        private static IEmployeeService _employeeService;
-        private static IDepartmentService _departmentService;
+        private static IServicioEmpleado _servicioEmpleado;
+        private static IServicioDepartamento _servicioDepartamento;
 
-        public static IEmployeeService EmployeeService
+        public static IServicioEmpleado ServicioEmpleado
         {
             get
             {
-                if (_employeeService == null)
+                if (_servicioEmpleado == null)
                 {
-                    _employeeService = new EmployeeService();
+                    _servicioEmpleado = new ServicioEmpleado();
                 }
-                return _employeeService;
+                return _servicioEmpleado;
             }
         }
 
-        public static IDepartmentService DepartmentService
+        public static IServicioDepartamento ServicioDepartamento
         {
             get
             {
-                if (_departmentService == null)
+                if (_servicioDepartamento == null)
                 {
-                    _departmentService = new DepartmentService();
+                    _servicioDepartamento = new ServicioDepartamento();
                 }
-                return _departmentService;
+                return _servicioDepartamento;
             }
         }
 
         protected void Application_Start(object sender, EventArgs e)
         {
             // Inicializar servicios
-            _employeeService = new EmployeeService();
-            _departmentService = new DepartmentService();
+            _servicioEmpleado = new ServicioEmpleado();
+            _servicioDepartamento = new ServicioDepartamento();
 
             // Desactivar la validación no intrusiva
             ValidationSettings.UnobtrusiveValidationMode = UnobtrusiveValidationMode.None;

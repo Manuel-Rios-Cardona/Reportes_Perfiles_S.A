@@ -1,20 +1,20 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace PerfilesSA.Models
+namespace PerfilesSA.Modelos
 {
-    public class Employee
+    public class Empleado
     {
-        public int EmployeeId { get; set; }
+        public int IdEmpleado { get; set; }
 
         [Required(ErrorMessage = "El nombre es requerido")]
         [StringLength(50, ErrorMessage = "El nombre no puede exceder los 50 caracteres")]
-        public string FirstName { get; set; }
+        public string Nombre { get; set; }
 
         [Required(ErrorMessage = "El apellido es requerido")]
         [StringLength(50, ErrorMessage = "El apellido no puede exceder los 50 caracteres")]
-        public string LastName { get; set; }
+        public string Apellido { get; set; }
 
         [Required(ErrorMessage = "El DPI es requerido")]
         [StringLength(13, MinimumLength = 13, ErrorMessage = "El DPI debe tener exactamente 13 dígitos")]
@@ -23,59 +23,59 @@ namespace PerfilesSA.Models
         public string DPI { get; set; }
 
         [Required(ErrorMessage = "La fecha de nacimiento es requerida")]
-        public DateTime BirthDate { get; set; }
+        public DateTime FechaNacimiento { get; set; }
 
         [Required(ErrorMessage = "El género es requerido")]
         [StringLength(1)]
-        public string Gender { get; set; }
+        public string Genero { get; set; }
 
         [Required(ErrorMessage = "La fecha de ingreso es requerida")]
-        public DateTime HireDate { get; set; }
+        public DateTime FechaIngreso { get; set; }
 
         [StringLength(200)]
-        public string Address { get; set; }
+        public string Direccion { get; set; }
 
         [StringLength(20)]
         [RegularExpression(@"^\d{-}?\d{-}?$", ErrorMessage = "Formato de NIT inválido")]
         public string NIT { get; set; }
 
         [Required(ErrorMessage = "El departamento es requerido")]
-        public int DepartmentId { get; set; }
+        public int IdDepartamento { get; set; }
 
         // Propiedades calculadas
-        public int Age => CalculateAge(BirthDate);
-        public int YearsOfService => CalculateYearsOfService(HireDate);
+        public int Edad => CalcularEdad(FechaNacimiento);
+        public int AniosServicio => CalcularAniosServicio(FechaIngreso);
 
         // Métodos privados para cálculos
-        private int CalculateAge(DateTime birthDate)
+        private int CalcularEdad(DateTime fechaNacimiento)
         {
-            var today = DateTime.Today;
-            var age = today.Year - birthDate.Year;
-            if (birthDate > today.AddYears(-age))
-                age--;
-            return age;
+            var hoy = DateTime.Today;
+            var edad = hoy.Year - fechaNacimiento.Year;
+            if (fechaNacimiento > hoy.AddYears(-edad))
+                edad--;
+            return edad;
         }
 
-        private int CalculateYearsOfService(DateTime hireDate)
+        private int CalcularAniosServicio(DateTime fechaIngreso)
         {
-            var today = DateTime.Today;
-            var years = today.Year - hireDate.Year;
-            if (hireDate > today.AddYears(-years))
-                years--;
-            return years;
+            var hoy = DateTime.Today;
+            var anios = hoy.Year - fechaIngreso.Year;
+            if (fechaIngreso > hoy.AddYears(-anios))
+                anios--;
+            return anios;
         }
 
-        public virtual Department Department { get; set; }
+        public virtual Departamento Departamento { get; set; }
 
-        public string DepartmentName { get; set; }
+        public string NombreDepartamento { get; set; }
 
-        public bool IsActive { get; set; }
+        public bool EstaActivo { get; set; }
 
-        public DateTime CreatedDate { get; set; }
-        public DateTime? ModifiedDate { get; set; }
+        public DateTime FechaCreacion { get; set; }
+        public DateTime? FechaModificacion { get; set; }
 
         // Método de validación personalizado para el DPI
-        public bool IsValidDPI()
+        public bool EsDPIValido()
         {
             if (string.IsNullOrEmpty(DPI)) return false;
             if (DPI.Length != 13) return false;
@@ -88,4 +88,4 @@ namespace PerfilesSA.Models
             return true;
         }
     }
-}
+} 

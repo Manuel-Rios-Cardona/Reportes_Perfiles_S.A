@@ -15,139 +15,139 @@ GO
 USE PerfilesDB;
 GO
 
--- Crear tablas principaless
--- Tabla de Departamentos
-CREATE TABLE Departments (
-    DepartmentId INT IDENTITY(1,1) PRIMARY KEY,
-    Name NVARCHAR(100) NOT NULL,
-    IsActive BIT NOT NULL DEFAULT 1,
-    CreatedAt DATETIME NOT NULL DEFAULT GETDATE(),
-    UpdatedAt DATETIME NULL
+-- Crear tablas principales
+-- Tabla de Departamentoss
+CREATE TABLE Departamentos (
+    IdDepartamento INT IDENTITY(1,1) PRIMARY KEY,
+    Nombre NVARCHAR(100) NOT NULL,
+    EstaActivo BIT NOT NULL DEFAULT 1,
+    FechaCreacion DATETIME NOT NULL DEFAULT GETDATE(),
+    FechaActualizacion DATETIME NULL
 );
 GO
 
 -- Tabla de Empleados
-CREATE TABLE Employees (
-    EmployeeId INT IDENTITY(1,1) PRIMARY KEY,
-    FirstName NVARCHAR(50) NOT NULL,
-    LastName NVARCHAR(50) NOT NULL,
+CREATE TABLE Empleados (
+    IdEmpleado INT IDENTITY(1,1) PRIMARY KEY,
+    Nombre NVARCHAR(50) NOT NULL,
+    Apellido NVARCHAR(50) NOT NULL,
     DPI NVARCHAR(13) NOT NULL UNIQUE,
-    BirthDate DATE NOT NULL,
-    Gender NVARCHAR(1) NOT NULL CHECK (Gender IN ('M', 'F')),
-    HireDate DATE NOT NULL,
-    Address NVARCHAR(200) NULL,
+    FechaNacimiento DATE NOT NULL,
+    Genero NVARCHAR(1) NOT NULL CHECK (Genero IN ('M', 'F')),
+    FechaIngreso DATE NOT NULL,
+    Direccion NVARCHAR(200) NULL,
     NIT NVARCHAR(20) NULL,
-    DepartmentId INT NOT NULL,
-    IsActive BIT NOT NULL DEFAULT 1,
-    CreatedAt DATETIME NOT NULL DEFAULT GETDATE(),
-    UpdatedAt DATETIME NULL,
-    CONSTRAINT FK_Employees_Departments FOREIGN KEY (DepartmentId) 
-        REFERENCES Departments(DepartmentId)
+    IdDepartamento INT NOT NULL,
+    EstaActivo BIT NOT NULL DEFAULT 1,
+    FechaCreacion DATETIME NOT NULL DEFAULT GETDATE(),
+    FechaActualizacion DATETIME NULL,
+    CONSTRAINT FK_Empleados_Departamentos FOREIGN KEY (IdDepartamento) 
+        REFERENCES Departamentos(IdDepartamento)
 );
 GO
 
 -- Procedimientos para gestión de empleados
 -- Obtener lista completa de empleados
-CREATE PROCEDURE sp_GetAllEmployees
+CREATE PROCEDURE sp_ObtenerTodosEmpleados
 AS
 BEGIN
     SELECT 
-        e.EmployeeId,
-        e.FirstName,
-        e.LastName,
+        e.IdEmpleado,
+        e.Nombre,
+        e.Apellido,
         e.DPI,
-        e.BirthDate,
-        e.Gender,
-        e.HireDate,
-        e.Address,
+        e.FechaNacimiento,
+        e.Genero,
+        e.FechaIngreso,
+        e.Direccion,
         e.NIT,
-        e.DepartmentId,
-        d.Name AS DepartmentName,
-        d.IsActive AS DepartmentIsActive,
-        e.IsActive
-    FROM Employees e
-    INNER JOIN Departments d ON e.DepartmentId = d.DepartmentId
-    ORDER BY e.LastName, e.FirstName;
+        e.IdDepartamento,
+        d.Nombre AS NombreDepartamento,
+        d.EstaActivo AS DepartamentoActivo,
+        e.EstaActivo
+    FROM Empleados e
+    INNER JOIN Departamentos d ON e.IdDepartamento = d.IdDepartamento
+    ORDER BY e.Apellido, e.Nombre;
 END;
 GO
 
 -- Filtrar empleados por departamento
-CREATE PROCEDURE sp_GetEmployeesByDepartment
-    @DepartmentId INT
+CREATE PROCEDURE sp_ObtenerEmpleadosPorDepartamento
+    @IdDepartamento INT
 AS
 BEGIN
     SELECT 
-        e.EmployeeId,
-        e.FirstName,
-        e.LastName,
+        e.IdEmpleado,
+        e.Nombre,
+        e.Apellido,
         e.DPI,
-        e.BirthDate,
-        e.Gender,
-        e.HireDate,
-        e.Address,
+        e.FechaNacimiento,
+        e.Genero,
+        e.FechaIngreso,
+        e.Direccion,
         e.NIT,
-        e.DepartmentId,
-        d.Name AS DepartmentName,
-        d.IsActive AS DepartmentIsActive,
-        e.IsActive
-    FROM Employees e
-    INNER JOIN Departments d ON e.DepartmentId = d.DepartmentId
-    WHERE e.DepartmentId = @DepartmentId
-    ORDER BY e.LastName, e.FirstName;
+        e.IdDepartamento,
+        d.Nombre AS NombreDepartamento,
+        d.EstaActivo AS DepartamentoActivo,
+        e.EstaActivo
+    FROM Empleados e
+    INNER JOIN Departamentos d ON e.IdDepartamento = d.IdDepartamento
+    WHERE e.IdDepartamento = @IdDepartamento
+    ORDER BY e.Apellido, e.Nombre;
 END;
 GO
 
 -- Filtrar empleados por fecha de ingreso
-CREATE PROCEDURE sp_GetEmployeesByDateRange
-    @StartDate DATE,
-    @EndDate DATE
+CREATE PROCEDURE sp_ObtenerEmpleadosPorRangoFechas
+    @FechaInicio DATE,
+    @FechaFin DATE
 AS
 BEGIN
     SELECT 
-        e.EmployeeId,
-        e.FirstName,
-        e.LastName,
+        e.IdEmpleado,
+        e.Nombre,
+        e.Apellido,
         e.DPI,
-        e.BirthDate,
-        e.Gender,
-        e.HireDate,
-        e.Address,
+        e.FechaNacimiento,
+        e.Genero,
+        e.FechaIngreso,
+        e.Direccion,
         e.NIT,
-        e.DepartmentId,
-        d.Name AS DepartmentName,
-        d.IsActive AS DepartmentIsActive,
-        e.IsActive
-    FROM Employees e
-    INNER JOIN Departments d ON e.DepartmentId = d.DepartmentId
-    WHERE e.HireDate BETWEEN @StartDate AND @EndDate
-    ORDER BY e.LastName, e.FirstName;
+        e.IdDepartamento,
+        d.Nombre AS NombreDepartamento,
+        d.EstaActivo AS DepartamentoActivo,
+        e.EstaActivo
+    FROM Empleados e
+    INNER JOIN Departamentos d ON e.IdDepartamento = d.IdDepartamento
+    WHERE e.FechaIngreso BETWEEN @FechaInicio AND @FechaFin
+    ORDER BY e.Apellido, e.Nombre;
 END;
 GO
 
 -- Agregar nuevo empleado
-CREATE PROCEDURE sp_InsertEmployee
-    @FirstName NVARCHAR(50),
-    @LastName NVARCHAR(50),
+CREATE PROCEDURE sp_InsertarEmpleado
+    @Nombre NVARCHAR(50),
+    @Apellido NVARCHAR(50),
     @DPI NVARCHAR(13),
-    @BirthDate DATE,
-    @Gender NVARCHAR(1),
-    @HireDate DATE,
-    @Address NVARCHAR(200),
+    @FechaNacimiento DATE,
+    @Genero NVARCHAR(1),
+    @FechaIngreso DATE,
+    @Direccion NVARCHAR(200),
     @NIT NVARCHAR(20),
-    @DepartmentId INT
+    @IdDepartamento INT
 AS
 BEGIN
     BEGIN TRY
-        INSERT INTO Employees (
-            FirstName, LastName, DPI, BirthDate, 
-            Gender, HireDate, Address, NIT, DepartmentId
+        INSERT INTO Empleados (
+            Nombre, Apellido, DPI, FechaNacimiento, 
+            Genero, FechaIngreso, Direccion, NIT, IdDepartamento
         )
         VALUES (
-            @FirstName, @LastName, @DPI, @BirthDate,
-            @Gender, @HireDate, @Address, @NIT, @DepartmentId
+            @Nombre, @Apellido, @DPI, @FechaNacimiento,
+            @Genero, @FechaIngreso, @Direccion, @NIT, @IdDepartamento
         );
 
-        SELECT SCOPE_IDENTITY() AS EmployeeId;
+        SELECT SCOPE_IDENTITY() AS IdEmpleado;
     END TRY
     BEGIN CATCH
         THROW;
@@ -156,33 +156,33 @@ END;
 GO
 
 -- Modificar datos de empleado
-CREATE PROCEDURE sp_UpdateEmployee
-    @EmployeeId INT,
-    @FirstName NVARCHAR(50),
-    @LastName NVARCHAR(50),
+CREATE PROCEDURE sp_ActualizarEmpleado
+    @IdEmpleado INT,
+    @Nombre NVARCHAR(50),
+    @Apellido NVARCHAR(50),
     @DPI NVARCHAR(13),
-    @BirthDate DATE,
-    @Gender NVARCHAR(1),
-    @HireDate DATE,
-    @Address NVARCHAR(200),
+    @FechaNacimiento DATE,
+    @Genero NVARCHAR(1),
+    @FechaIngreso DATE,
+    @Direccion NVARCHAR(200),
     @NIT NVARCHAR(20),
-    @DepartmentId INT
+    @IdDepartamento INT
 AS
 BEGIN
     BEGIN TRY
-        UPDATE Employees
+        UPDATE Empleados
         SET 
-            FirstName = @FirstName,
-            LastName = @LastName,
+            Nombre = @Nombre,
+            Apellido = @Apellido,
             DPI = @DPI,
-            BirthDate = @BirthDate,
-            Gender = @Gender,
-            HireDate = @HireDate,
-            Address = @Address,
+            FechaNacimiento = @FechaNacimiento,
+            Genero = @Genero,
+            FechaIngreso = @FechaIngreso,
+            Direccion = @Direccion,
             NIT = @NIT,
-            DepartmentId = @DepartmentId,
-            UpdatedAt = GETDATE()
-        WHERE EmployeeId = @EmployeeId;
+            IdDepartamento = @IdDepartamento,
+            FechaActualizacion = GETDATE()
+        WHERE IdEmpleado = @IdEmpleado;
     END TRY
     BEGIN CATCH
         THROW;
@@ -191,13 +191,13 @@ END;
 GO
 
 -- Eliminar empleado
-CREATE PROCEDURE sp_DeleteEmployee
-    @EmployeeId INT
+CREATE PROCEDURE sp_EliminarEmpleado
+    @IdEmpleado INT
 AS
 BEGIN
     BEGIN TRY
-        DELETE FROM Employees
-        WHERE EmployeeId = @EmployeeId;
+        DELETE FROM Empleados
+        WHERE IdEmpleado = @IdEmpleado;
     END TRY
     BEGIN CATCH
         THROW;
@@ -207,30 +207,30 @@ GO
 
 -- Procedimientos para gestión de departamentos
 -- Obtener lista de departamentos
-CREATE PROCEDURE sp_GetAllDepartments
+CREATE PROCEDURE sp_ObtenerTodosDepartamentos
 AS
 BEGIN
     SELECT 
-        DepartmentId,
-        Name,
-        IsActive,
-        CreatedAt,
-        UpdatedAt
-    FROM Departments
-    ORDER BY Name;
+        IdDepartamento,
+        Nombre,
+        EstaActivo,
+        FechaCreacion,
+        FechaActualizacion
+    FROM Departamentos
+    ORDER BY Nombre;
 END;
 GO
 
 -- Agregar nuevo departamento
-CREATE PROCEDURE sp_InsertDepartment
-    @Name NVARCHAR(100)
+CREATE PROCEDURE sp_InsertarDepartamento
+    @Nombre NVARCHAR(100)
 AS
 BEGIN
     BEGIN TRY
-        INSERT INTO Departments (Name)
-        VALUES (@Name);
+        INSERT INTO Departamentos (Nombre)
+        VALUES (@Nombre);
 
-        SELECT SCOPE_IDENTITY() AS DepartmentId;
+        SELECT SCOPE_IDENTITY() AS IdDepartamento;
     END TRY
     BEGIN CATCH
         THROW;
@@ -239,17 +239,17 @@ END;
 GO
 
 -- Modificar departamento
-CREATE PROCEDURE sp_UpdateDepartment
-    @DepartmentId INT,
-    @Name NVARCHAR(100)
+CREATE PROCEDURE sp_ActualizarDepartamento
+    @IdDepartamento INT,
+    @Nombre NVARCHAR(100)
 AS
 BEGIN
     BEGIN TRY
-        UPDATE Departments
+        UPDATE Departamentos
         SET 
-            Name = @Name,
-            UpdatedAt = GETDATE()
-        WHERE DepartmentId = @DepartmentId;
+            Nombre = @Nombre,
+            FechaActualizacion = GETDATE()
+        WHERE IdDepartamento = @IdDepartamento;
     END TRY
     BEGIN CATCH
         THROW;
@@ -258,19 +258,19 @@ END;
 GO
 
 -- Eliminar departamento
-CREATE PROCEDURE sp_DeleteDepartment
-    @DepartmentId INT
+CREATE PROCEDURE sp_EliminarDepartamento
+    @IdDepartamento INT
 AS
 BEGIN
     BEGIN TRY
         -- Verificar si hay empleados asignados
-        IF EXISTS (SELECT 1 FROM Employees WHERE DepartmentId = @DepartmentId)
+        IF EXISTS (SELECT 1 FROM Empleados WHERE IdDepartamento = @IdDepartamento)
         BEGIN
             THROW 50001, 'No se puede eliminar el departamento porque tiene empleados asignados.', 1;
         END
 
-        DELETE FROM Departments
-        WHERE DepartmentId = @DepartmentId;
+        DELETE FROM Departamentos
+        WHERE IdDepartamento = @IdDepartamento;
     END TRY
     BEGIN CATCH
         THROW;
@@ -279,16 +279,16 @@ END;
 GO
 
 -- Activar/Desactivar departamento
-CREATE PROCEDURE sp_ToggleDepartmentStatus
-    @DepartmentId INT
+CREATE PROCEDURE sp_CambiarEstadoDepartamento
+    @IdDepartamento INT
 AS
 BEGIN
     BEGIN TRY
-        UPDATE Departments
+        UPDATE Departamentos
         SET 
-            IsActive = ~IsActive,
-            UpdatedAt = GETDATE()
-        WHERE DepartmentId = @DepartmentId;
+            EstaActivo = ~EstaActivo,
+            FechaActualizacion = GETDATE()
+        WHERE IdDepartamento = @IdDepartamento;
     END TRY
     BEGIN CATCH
         THROW;
@@ -298,7 +298,7 @@ GO
 
 -- Datos de prueba
 -- Departamentos iniciales
-INSERT INTO Departments (Name) VALUES 
+INSERT INTO Departamentos (Nombre) VALUES 
 ('Administración'),
 ('Contabilidad'),
 ('Recursos Humanos'),
@@ -308,16 +308,16 @@ GO
 
 -- Índices para mejorar rendimiento
 -- Índice para DPI (campo único)
-CREATE NONCLUSTERED INDEX IX_Employees_DPI
-ON Employees(DPI);
+CREATE NONCLUSTERED INDEX IX_Empleados_DPI
+ON Empleados(DPI);
 GO
 
 -- Índice para relación con departamentos
-CREATE NONCLUSTERED INDEX IX_Employees_DepartmentId
-ON Employees(DepartmentId);
+CREATE NONCLUSTERED INDEX IX_Empleados_IdDepartamento
+ON Empleados(IdDepartamento);
 GO
 
 -- Índice para búsqueda por nombre de departamento
-CREATE NONCLUSTERED INDEX IX_Departments_Name
-ON Departments(Name);
+CREATE NONCLUSTERED INDEX IX_Departamentos_Nombre
+ON Departamentos(Nombre);
 GO
